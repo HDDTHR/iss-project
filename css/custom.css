@@ -1,0 +1,9 @@
+main {
+    @media (min-width: 577px) {
+        max-width: 577px !important;
+     }
+}
+
+section{
+    display: none;
+}

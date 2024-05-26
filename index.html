@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Class-less preview • Pico CSS</title>
+    <meta
+      name="description"
+      content="A class-less example, without dependencies."
+    />
+
+    <!-- Pico.css -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.classless.min.css"
+    />
+    <link rel="stylesheet" href="css/custom.css" />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header>
+      <hgroup>
+        <h1>ISS Project</h1>
+        <p>A demonstrative website to showcase the DES and RSA Algorithms!</p>
+      </hgroup>
+      <nav>
+        <ul>
+          <li>
+            <label for="rsa"
+              ><input
+                type="radio"
+                id="rsa"
+                name="tab-selector"
+                onchange="showContent(this)"
+                value="rsa"
+              />RSA</label
+            >
+          </li>
+          <li>
+            <label for="des"
+              ><input
+                type="radio"
+                id="des"
+                name="tab-selector"
+                onchange="showContent(this)"
+                value="des"
+              />DES</label
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <!-- ./ Header -->
+
+    <!-- Main -->
+    <main>
+      <!-- RSA-->
+      <section id="rsa-content">
+        <h2>RSA Algorithm</h2>
+        <form id="rsa-form">
+          <label for="rsa-message">
+            Message
+            <input type="text" id="rsa-message" value="Dr. Mustafa Fayoumi" />
+          </label>
+          <label for="rsa-output">
+            Output
+            <input type="text" id="rsa-output" disabled />
+          </label>
+        </form>
+      </section>
+      <!-- ./ RSA-->
+
+      <!-- DES-->
+      <section id="des-content">
+        <h2>DES Algorithm</h2>
+        <form id="des-form" oninput="desForm(this)">
+          <label for="des-message">
+            Message
+            <input type="text" id="des-message" value="Dr. Mustafa Fayoumi" required/>
+          </label>
+          <label for="des-key">
+            Key
+            <formset role="group">
+              <input
+                type="text"
+                id="des-key"
+                required
+                pattern="^[0-9a-fA-F]{16}$"
+              />
+              <input type="button" value="Random Key" onclick="generateRandomDESKey()">
+            </formset>
+          </label>
+          <label for="des-toggle">
+            <input type="checkbox" role="switch" id="des-toggle" />
+            Decrypt
+          </label>
+          <label for="des-output">
+            Output
+            <input type="text" id="des-output" disabled />
+          </label>
+        </form>
+      </section>
+      <!-- ./ DES-->
+    </main>
+    <!-- ./ Main -->
+
+    <!-- Footer -->
+    <footer>
+      <small
+        >Built with <a href="https://picocss.com">Pico</a> •
+        <a
+          href="https://github.com/picocss/examples/blob/master/v2-html-classless/index.html"
+          >Source code</a
+        ></small
+      >
+    </footer>
+    <!-- ./ Footer -->
+  </body>
+
+  <script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script>
+  <script src="js/symmetric.js" type="module"></script>
+  <script src="js/asymmetric.js" type="module"></script>
+  <script src="js/script.js" type="module"></script>
+</html>
