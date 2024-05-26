@@ -1,9 +1,14 @@
 main {
     @media (min-width: 577px) {
         max-width: 577px !important;
-     }
+    }
 }
 
-section{
+section {
     display: none;
+}
+
+button {
+    height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
+    text-wrap: nowrap;
 }

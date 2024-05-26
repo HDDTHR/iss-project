@@ -10,15 +10,15 @@ const randomPrime = (bits) => {
   }
 };
 
-const generate = (keysize) => {
+const getGenerationObject = (keysize) => {
   const e = bigInt(65537);
   let p;
   let q;
   let totient;
 
   do {
-    p = this.randomPrime(keysize / 2);
-    q = this.randomPrime(keysize / 2);
+    p = randomPrime(keysize / 2);
+    q = randomPrime(keysize / 2);
     totient = bigInt.lcm(p.prev(), q.prev());
   } while (
     bigInt.gcd(e, totient).notEquals(1) ||
@@ -29,14 +29,34 @@ const generate = (keysize) => {
       .isZero()
   );
 
-  return {
+  const result =  {
+    p,
+    q,
     e,
     n: p.multiply(q),
     d: e.modInv(totient),
   };
+
+  console.log(result)
+
+  return result;
 };
 
-const encrypt = (encodedMsg, n, e) => {
+const generate = (p, q) => {
+  const e = bigInt(65537);
+  const totient = bigInt.lcm(p.prev(), q.prev());
+
+  // Calculate private exponent d
+  const d = e.modInv(totient);
+
+  return {
+    e,
+    n: p.multiply(q),
+    d,
+  };
+};
+
+const encrypt = (encodedMsg, e, n) => {
   return bigInt(encodedMsg).modPow(e, n);
 };
 
@@ -44,7 +64,7 @@ const decrypt = (encryptedMsg, d, n) => {
   return bigInt(encryptedMsg).modPow(d, n);
 };
 
-const encode = (str) => {
+const encodeString = (str) => {
   const codes = str
     .split("")
     .map((i) => i.charCodeAt())
@@ -53,7 +73,7 @@ const encode = (str) => {
   return bigInt(codes);
 };
 
-const decode = (code) => {
+const decodeString = (code) => {
   const stringified = code.toString();
   let string = "";
 
@@ -70,3 +90,5 @@ const decode = (code) => {
 
   return string;
 };
+
+const rsa = (msg, n, d, e, dec) => dec ? decodeString(decrypt(msg, d, n)) : encrypt(encodeString(msg), e, n);

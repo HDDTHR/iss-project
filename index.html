@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <title>Class-less preview • Pico CSS</title>
+    <title>ISS Project</title>
     <meta
       name="description"
       content="A class-less example, without dependencies."
@@ -59,14 +59,48 @@
       <!-- RSA-->
       <section id="rsa-content">
         <h2>RSA Algorithm</h2>
-        <form id="rsa-form">
+        <form id="rsa-form" oninput="rsaForm(this)">
           <label for="rsa-message">
             Message
             <input type="text" id="rsa-message" value="Dr. Mustafa Fayoumi" />
           </label>
+          <label for="rsa-key">
+            Prime Numbers (p, q)
+            <formset role="group">
+              <input
+                type="number"
+                id="rsa-p"
+                required
+                pattern="\d+"
+              />
+              <input
+                type="number"
+                id="rsa-q"
+                required
+                pattern="\d+"
+              />
+              <button type="button" onclick="generateRandomRSAKey(this)">Random Primes</button>
+            </formset>
+          </label>
+          <label for="rsa-toggle">
+            <input type="checkbox" role="switch" id="rsa-toggle" />
+            Decrypt
+          </label>
+          <label for="rsa-message">
+            Exponent
+            <input type="text" id="rsa-exp" readonly/>
+          </label>
+          <label for="rsa-public">
+            Public Key
+            <textarea type="text" id="rsa-public" readonly></textarea>
+          </label>
+          <label for="rsa-private">
+            Private Key
+            <textarea  id="rsa-private" readonly></textarea>
+          </label>
           <label for="rsa-output">
             Output
-            <input type="text" id="rsa-output" disabled />
+            <input type="text" id="rsa-output" readonly />
           </label>
         </form>
       </section>
@@ -81,7 +115,7 @@
             <input type="text" id="des-message" value="Dr. Mustafa Fayoumi" required/>
           </label>
           <label for="des-key">
-            Key
+            Key in Hex
             <formset role="group">
               <input
                 type="text"
@@ -89,7 +123,7 @@
                 required
                 pattern="^[0-9a-fA-F]{16}$"
               />
-              <input type="button" value="Random Key" onclick="generateRandomDESKey()">
+              <input type="button" value="Random Key" id="rsa-generate" onclick="generateRandomDESKey()">
             </formset>
           </label>
           <label for="des-toggle">
@@ -98,7 +132,7 @@
           </label>
           <label for="des-output">
             Output
-            <input type="text" id="des-output" disabled />
+            <input type="text" id="des-output" readonly />
           </label>
         </form>
       </section>
@@ -120,7 +154,8 @@
   </body>
 
   <script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script>
-  <script src="js/symmetric.js" type="module"></script>
-  <script src="js/asymmetric.js" type="module"></script>
-  <script src="js/script.js" type="module"></script>
+  <script src="js/symmetric.js"></script>
+  <script src="js/asymmetric.js"></script>
+
+  <script src="js/script.js"></script>
 </html>

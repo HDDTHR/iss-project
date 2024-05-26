@@ -1,8 +1,8 @@
 const PC1 = [
-    57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35,
-    27, 19, 11, 3, 60, 52, 44, 36, 63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46,
-    38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4,
-  ],
+  57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35,
+  27, 19, 11, 3, 60, 52, 44, 36, 63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46,
+  38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4,
+],
   PC2 = [
     14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27,
     20, 13, 2, 41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48, 44, 49, 39, 56,
@@ -85,16 +85,13 @@ const bin = (key) =>
     .join("");
 const shiftString = (str, shift) =>
   str.slice(shift, str.length) + str.slice(0, shift);
-const asciiToBinary = (str) => {
-  return str
-    .split("")
-    .map((char) => ("00000000" + char.charCodeAt(0).toString(2)).slice(-8))
-    .join("");
-};
-const padMessageWithSpaces = (message) => {
-  const blockSize = 8;
-  const paddingNeeded = blockSize - (message.length % blockSize);
-  return message + " ".repeat(paddingNeeded === blockSize ? 0 : paddingNeeded);
+const stringToBinary = (input) => {
+  let characters = input.split('');
+  return characters
+    .map(function (char) {
+      return char.charCodeAt(0).toString(2).padStart(8, 0)
+    })
+    .join('');
 }
 
 const keySchedule = (key) => {
@@ -137,23 +134,27 @@ const sBoxOutput = (bits) => {
 };
 
 const des_internal = (msg, key, subkeys) => {
-  let perm = IP.map((index) => msg[index - 1]).join(""); // init permute (IP)
-  let L0 = perm.substr(0, perm.length / 2);
-  let R0 = perm.substr(perm.length / 2);
+  let chunks = msg.match(new RegExp('.{1,64}', 'g'))
+  let result = ""
+  chunks.forEach((chunk) => {
+    let perm = IP.map((index) => chunk[index - 1]).join(""); // init permute (IP)
+    let L0 = perm.substr(0, perm.length / 2);
+    let R0 = perm.substr(perm.length / 2);
 
-  let prevL0 = L0,
-    prevR0 = R0;
-  for (let i = 0; i < 16; i++) {
-    L0 = prevR0;
-    let sBoxOut = sBoxOutput(stringXOR(subkeys[i], expandBlock(R0), 48));
-    let finalPerm = P.map((index) => sBoxOut[index - 1]).join("");
-    R0 = stringXOR(prevL0, finalPerm, 32);
-    prevL0 = L0;
-    prevR0 = R0;
-  }
-  let pair = R0 + L0;
-  let enc = FINAL_IP.map((index) => pair[index - 1]).join("");
-  return chunkString(enc, 4).map(binToHex).join("").toUpperCase();
+    let prevL0 = L0,
+      prevR0 = R0;
+    for (let i = 0; i < 16; i++) {
+      L0 = prevR0;
+      let sBoxOut = sBoxOutput(stringXOR(subkeys[i], expandBlock(R0), 48));
+      let finalPerm = P.map((index) => sBoxOut[index - 1]).join("");
+      R0 = stringXOR(prevL0, finalPerm, 32);
+      prevL0 = L0;
+      prevR0 = R0;
+    }
+    let pair = R0 + L0;
+    result += FINAL_IP.map((index) => pair[index - 1]).join("");
+  })
+  return result;
 };
 
 const encode = (msg, key) => des_internal(msg, key, keySchedule(key));
@@ -161,5 +162,3 @@ const decode = (msg, key) => des_internal(msg, key, keySchedule(key).reverse());
 
 const des = (msg, key, decrypt) =>
   decrypt ? decode(msg, key) : encode(msg, key);
-
-export { bin, des, padMessageWithSpaces, asciiToBinary };
